@@ -54,6 +54,17 @@ function get_args(arg, myarg)
     return var
 end
 
+function is_normal_node(e)
+    if e and e.type and e.protocol and (e.protocol == "_balancing" or e.protocol == "_shunt") then
+        return false
+    end
+    return true
+end
+
+function is_special_node(e)
+    return is_normal_node(e) == false
+end
+
 function get_valid_nodes()
     local nodes_ping = uci_get_type("global_other", "nodes_ping") or ""
     local nodes = {}
@@ -355,6 +366,9 @@ end
 
 function compare_versions(ver1, comp, ver2)
     local table = table
+
+    if not ver1 then ver1 = "" end
+    if not ver2 then ver2 = "" end
 
     local av1 = util.split(ver1, "[%.%-]", nil, true)
     local av2 = util.split(ver2, "[%.%-]", nil, true)
